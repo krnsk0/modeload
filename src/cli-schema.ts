@@ -22,7 +22,8 @@ export const CliArgsSchema = z.object({
   filename: FilePathSchema,
   dbPath: DatabasePathSchema,
   help: z.boolean().default(false),
-  version: z.boolean().default(false)
+  version: z.boolean().default(false),
+  yes: z.boolean().default(false)
 });
 
 // Type inference for TypeScript
@@ -34,7 +35,8 @@ export const HelpSchema = z.object({
   version: z.boolean().default(false),
   command: z.undefined(),
   filename: z.undefined(),
-  dbPath: z.undefined()
+  dbPath: z.undefined(),
+  yes: z.boolean().default(false)
 });
 
 // Version command schema
@@ -43,7 +45,8 @@ export const VersionSchema = z.object({
   help: z.boolean().default(false),
   command: z.undefined(),
   filename: z.undefined(),
-  dbPath: z.undefined()
+  dbPath: z.undefined(),
+  yes: z.boolean().default(false)
 });
 
 // Union type for all possible CLI inputs

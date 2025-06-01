@@ -1,6 +1,6 @@
 {
   "name": "modeload",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A simple CLI tool to save and load Cursor custom modes",
   "main": "dist/index.js",
   "bin": {

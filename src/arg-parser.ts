@@ -1,4 +1,11 @@
 import { validateCliArgs, type AllCliArgs } from './cli-schema.js';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// Get the directory of the current module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
  * Parse command line arguments from process.argv
@@ -16,7 +23,8 @@ export function parseArgs(argv: string[] = process.argv): AllCliArgs {
       version: false,
       command: undefined,
       filename: undefined,
-      dbPath: undefined
+      dbPath: undefined,
+      yes: false
     });
   }
 
@@ -26,7 +34,8 @@ export function parseArgs(argv: string[] = process.argv): AllCliArgs {
       help: false,
       command: undefined,
       filename: undefined,
-      dbPath: undefined
+      dbPath: undefined,
+      yes: false
     });
   }
 
@@ -44,11 +53,17 @@ export function parseArgs(argv: string[] = process.argv): AllCliArgs {
 
   // Parse optional flags
   let dbPath: string | undefined;
+  let yes = false;
 
   // Look for --db-path flag
   const dbPathIndex = args.findIndex(arg => arg === '--db-path');
   if (dbPathIndex !== -1 && dbPathIndex + 1 < args.length) {
     dbPath = args[dbPathIndex + 1];
+  }
+
+  // Look for -y flag
+  if (args.includes('-y') || args.includes('--yes')) {
+    yes = true;
   }
 
   // Create arguments object
@@ -57,7 +72,8 @@ export function parseArgs(argv: string[] = process.argv): AllCliArgs {
     filename,
     dbPath,
     help: false,
-    version: false
+    version: false,
+    yes
   };
 
   // Validate with Zod schema
@@ -80,19 +96,21 @@ COMMANDS:
 
 OPTIONS:
   --db-path <path>   Use custom Cursor database location
+  -y, --yes          Skip load confirmation prompt (auto-confirm)
   --help, -h         Show this help message
   --version, -v      Show version information
 
 EXAMPLES:
   modeload save my-modes.json
   modeload load my-modes.json
+  modeload load my-modes.json -y
   modeload save backup.json --db-path "/custom/path/state.vscdb"
-  modeload load settings.json --db-path "/opt/cursor/state.vscdb"
+  modeload load settings.json --db-path "/opt/cursor/state.vscdb" -y
 
 NOTES:
   • Filenames must have .json extension
   • Database is auto-discovered if --db-path not provided
-  • All modes are validated before import/export
+  • Use -y to skip the safety confirmation when loading modes
 `);
 }
 
@@ -100,12 +118,12 @@ NOTES:
  * Display version information
  */
 export function showVersion(): void {
-  // In a real app, this would come from package.json
-  console.log(`
-🚀 Modeload v1.0.0
-A simple CLI tool to save and load Cursor custom modes
+  // Read package.json to get version
+  const packageJsonPath = join(__dirname, '..', 'package.json');
+  const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+  const version = packageJson.version || 'unknown';
 
-Database Discovery: ✅ Cross-platform (macOS, Windows, Linux)
-Validation: ✅ Zod schema validation
+  console.log(`
+🚀 Modeload v${version}
 `);
 }

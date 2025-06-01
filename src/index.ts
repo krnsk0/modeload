@@ -1,10 +1,28 @@
 #!/usr/bin/env node
 
+import { createInterface } from 'readline';
 import { findCursorDatabase, validateCursorDatabase } from './database.js';
 import { parseArgs, showHelp, showVersion } from './arg-parser.js';
 import { saveModesToFile } from './save.js';
 import { loadModesFromFile } from './load.js';
 import type { CliArgs } from './cli-schema.js';
+
+/**
+ * Prompt user for confirmation
+ */
+async function promptConfirmation(message: string): Promise<boolean> {
+  const rl = createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  return new Promise((resolve) => {
+    rl.question(`${message} (y/N): `, (answer) => {
+      rl.close();
+      resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes');
+    });
+  });
+}
 
 async function main() {
   try {
@@ -49,7 +67,7 @@ async function main() {
           await handleSaveCommand(dbPath, commandArgs.filename);
           break;
         case 'load':
-          await handleLoadCommand(dbPath, commandArgs.filename);
+          await handleLoadCommand(dbPath, commandArgs.filename, commandArgs.yes);
           break;
         default:
           throw new Error(`Unknown command: ${commandArgs.command}`);
@@ -78,8 +96,25 @@ async function handleSaveCommand(dbPath: string, filename: string): Promise<void
 /**
  * Handle the load command - import modes from JSON file to database
  */
-async function handleLoadCommand(dbPath: string, filename: string): Promise<void> {
+async function handleLoadCommand(dbPath: string, filename: string, skipConfirmation: boolean = false): Promise<void> {
   console.log(`📥 Importing custom modes from ${filename}...\n`);
+
+  // Strong warning about closing Cursor
+  console.log('🚨 IMPORTANT WARNING:');
+  console.log('   Cursor MUST be completely closed before running this command!');
+  console.log('   If Cursor is running, it may cache the old modes and ignore changes.');
+  console.log('   Please close all Cursor windows and processes before continuing.\n');
+
+  if (!skipConfirmation) {
+    const confirmed = await promptConfirmation('Are you sure Cursor is closed and you want to proceed?');
+    if (!confirmed) {
+      console.log('❌ Operation cancelled by user');
+      return;
+    }
+    console.log(''); // Add spacing
+  } else {
+    console.log('⚡ Skipping confirmation (auto-confirm enabled)\n');
+  }
 
   try {
     await loadModesFromFile(dbPath, filename);

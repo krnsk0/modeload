@@ -118,10 +118,15 @@ NOTES:
  * Display version information
  */
 export function showVersion(): void {
-  // Read package.json to get version
-  const packageJsonPath = join(__dirname, '..', 'package.json');
-  const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-  const version = packageJson.version || 'unknown';
+  let version = 'unknown';
+  try {
+    // Read package.json to get version
+    const packageJsonPath = join(__dirname, '..', 'package.json');
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+    version = packageJson.version || 'unknown';
+  } catch {
+    // Default to unknown if we can't read package.json
+  }
 
   console.log(`
 🚀 Modeload v${version}

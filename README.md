@@ -1,6 +1,6 @@
 # modeload
 
-A simple CLI tool to save and load Cursor custom modes as JSON files.
+A simple CLI tool to save and load Cursor custom modes as JSON files. Cursor IDE does not yet expose a means to programatically configure custom modes, commit mode configs to VCS, etc. This tool is a workaround until Cursor supports a means to do this.
 
 ## Installation
 

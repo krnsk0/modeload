@@ -20,7 +20,7 @@ modeload save modes.json
 modeload load modes.json
 ```
 
-**⚠️ IMPORTANT:** Cursor must be completely closed when loading modes, or it will _probably_ not work.
+**⚠️ IMPORTANT:** Cursor must be completely closed when loading modes, or it _most likely_ will not pick up any changes made by this tool.
 
 
 ## ⚠️ Important Disclaimers

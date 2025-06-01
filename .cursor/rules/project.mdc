@@ -1,0 +1,17 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+See [custom-modes.mdc](mdc:.cursor/rules/custom-modes.mdc) for info on where cursor stores custom modes in its DB
+
+Our goal is to create a VERY SIMPLE tool that can:
+1. allow saving custom modes to disk at a specified location, e.g. `modeload save modes.json`
+2. allow loading modes from a specified location e.g. `modeload load modes.json`
+
+Requirements:
+- we should back up the DB before the load command
+
+Stack:
+- use TSUP
+- need to ensure user has sqlite3

@@ -1,0 +1,40 @@
+{
+  "name": "modeload",
+  "version": "1.0.0",
+  "description": "A simple CLI tool to save and load Cursor custom modes",
+  "main": "dist/index.js",
+  "bin": {
+    "modeload": "dist/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsup && chmod +x dist/index.js",
+    "link": "npm link",
+    "build-link": "npm run build && npm link",
+    "dev": "tsup --watch",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "cursor",
+    "modes",
+    "cli",
+    "backup"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^9.2.2",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.8",
+    "@types/node": "^20.10.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -20,10 +20,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
 
-      # Install dependencies
-      - name: Install dependencies
+      - name: install dependencies
         run: npm ci
 
       # Run TypeScript type checking

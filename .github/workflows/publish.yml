@@ -26,12 +26,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 
-      # Install dependencies
-      - name: Install dependencies
+      # Clean install to avoid npm optional dependencies bug
+      - name: install dependencies
         run: npm ci
+
 
       # Run full test suite before publishing
       - name: Run type check

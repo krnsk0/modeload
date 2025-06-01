@@ -8,7 +8,6 @@ Create a VERY SIMPLE CLI tool that can save and load Cursor custom modes to/from
 2. **Load Command**: `modeload load modes.json` - Import custom modes from specified file
 
 ## Requirements
-- [ ] Back up the Cursor DB before any load operation
 - [x] Use `better-sqlite3` npm package (includes SQLite, no external dependencies)
 - [x] Use TSUP for build tooling
 - [ ] Use Zod for schema validation of modes files before loading
@@ -162,7 +161,6 @@ function getModesFromDb(db: Database.Database) {
 - [ ] Implement better-sqlite3 database operations
 - [ ] Implement Zod schema for mode validation
 - [ ] Add validation step before loading modes into DB
-- [ ] Add database backup functionality before loads
 - [ ] Handle JSON serialization/deserialization of modes
 - [ ] Add comprehensive error handling and validation feedback
 - [ ] Test with existing custom modes (like "PLAN" mode)
@@ -179,11 +177,10 @@ function getModesFromDb(db: Database.Database) {
 1. **Implement SQLite operations** - Read/write modes from database
 2. **Add CLI argument parsing** - Support save/load commands with file paths
 3. **Create Zod validation** - Validate modes before loading
-4. **Add database backup** - Backup before making changes
-5. **Test with real data** - Try reading your current "PLAN" mode
+4. **Test with real data** - Try reading your current "PLAN" mode
 
 ## Validation Flow
-1. **On Load**: Discover DB → Parse JSON file → Validate with Zod schema → Backup DB → Write to DB
+1. **On Load**: Discover DB → Parse JSON file → Validate with Zod schema → Write to DB
 2. **On Save**: Discover DB → Read from DB → Validate with Zod schema → Write JSON file
 3. **Error Handling**: Provide clear validation error messages for malformed files
 

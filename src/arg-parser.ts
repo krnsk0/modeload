@@ -92,7 +92,6 @@ EXAMPLES:
 NOTES:
   • Filenames must have .json extension
   • Database is auto-discovered if --db-path not provided
-  • Database is automatically backed up before load operations
   • All modes are validated before import/export
 `);
 }
@@ -108,6 +107,5 @@ A simple CLI tool to save and load Cursor custom modes
 
 Database Discovery: ✅ Cross-platform (macOS, Windows, Linux)
 Validation: ✅ Zod schema validation
-Safety: ✅ Automatic database backup
 `);
 }

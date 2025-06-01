@@ -1,0 +1,85 @@
+name: Publish to npm
+
+# Trigger on version tags (v1.0.0, v1.2.3, etc.)
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    name: Build and Publish to npm
+    runs-on: ubuntu-latest
+
+    # Require specific permissions for provenance
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      # Checkout the tagged code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Setup Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Run full test suite before publishing
+      - name: Run type check
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm run test
+
+      # Build the project
+      - name: Build project
+        run: npm run build
+
+      # Verify the tag matches package.json version
+      - name: Verify version matches tag
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
+            echo "❌ Tag version ($TAG_VERSION) doesn't match package.json version ($PACKAGE_VERSION)"
+            exit 1
+          fi
+          echo "✅ Version verification passed: $TAG_VERSION"
+
+      # Publish to npm with provenance
+      - name: Publish to npm
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Create GitHub release with changelog
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ## Changes in this release
+
+            📦 Published to npm: `npm install -g modeload@${{ github.ref_name }}`
+
+            ### What's Changed
+            See the [commit history](https://github.com/${{ github.repository }}/compare/${{ github.ref }}...HEAD) for detailed changes.
+
+            ### Installation
+            ```bash
+            npm install -g modeload@${{ github.ref_name }}
+            ```
+          draft: false
+          prerelease: false

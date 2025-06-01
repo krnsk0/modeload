@@ -15,12 +15,13 @@ npm install -g modeload
 modeload save modes.json
 ```
 
+**👀 NOTE:** Cursor must be completely closed when loading modes, or it _most likely_ will not pick up any changes made by this tool.
+
+
 ### Load modes from a file
 ```bash
 modeload load modes.json
 ```
-
-**⚠️ IMPORTANT:** Cursor must be completely closed when loading modes, or it _most likely_ will not pick up any changes made by this tool.
 
 
 ## ⚠️ Important Disclaimers

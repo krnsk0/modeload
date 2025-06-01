@@ -1,6 +1,0 @@
----
-description:
-globs:
-alwaysApply: true
----
-- tests should not assert about console log unless it is core functionality

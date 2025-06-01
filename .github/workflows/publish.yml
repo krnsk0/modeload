@@ -11,9 +11,9 @@ jobs:
     name: Build and Publish to npm
     runs-on: ubuntu-latest
 
-    # Require specific permissions for provenance
+    # Require specific permissions for provenance and release creation
     permissions:
-      contents: read
+      contents: write
       id-token: write
 
     steps:
@@ -63,23 +63,19 @@ jobs:
 
       # Create GitHub release with changelog
       - name: Create GitHub Release
-        uses: actions/create-release@v1
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title "Release ${{ github.ref_name }}" \
+            --notes "## Changes in this release
+
+          📦 Published to npm: \`npm install -g modeload@${{ github.ref_name }}\`
+
+          ### What's Changed
+          See the [commit history](https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}...HEAD) for detailed changes.
+
+          ### Installation
+          \`\`\`bash
+          npm install -g modeload@${{ github.ref_name }}
+          \`\`\`"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            ## Changes in this release
-
-            📦 Published to npm: `npm install -g modeload@${{ github.ref_name }}`
-
-            ### What's Changed
-            See the [commit history](https://github.com/${{ github.repository }}/compare/${{ github.ref }}...HEAD) for detailed changes.
-
-            ### Installation
-            ```bash
-            npm install -g modeload@${{ github.ref_name }}
-            ```
-          draft: false
-          prerelease: false

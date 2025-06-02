@@ -1,6 +1,8 @@
 # modeload
 
-A simple CLI tool to save and load Cursor custom modes as JSON files. Cursor IDE does not yet expose a means to programatically configure custom modes, commit mode configs to VCS, etc. This tool is a workaround until Cursor supports a means to do this.
+As of June 2025, Cursor IDE does not expose a means to programatically configure custom modes, commit mode configs to VCS, etc. This tool small CLI tool allows saving and loading Cursor custom modes as JSON files, and will be maintained until Cursor supports this natively.
+
+Cursor also limits the user to 5 custom modes. This tool allows bypassing this limit.
 
 ## Installation
 
@@ -23,15 +25,17 @@ modeload save modes.json
 modeload load modes.json
 ```
 
+## How does this work?
+Cursor persists its settings to an SQLite database. This tool reads and writes to this database to save and load modes. Cursor / VSCode appear to only read from this database when the app is opened, so this tool must be run before opening Cursor to ensure the modes are loaded.
+
 
 ## ⚠️ Important Disclaimers
 
 ### Use at Your Own Risk
 **This tool does not validate your modes files.** If you load a malformed or incompatible modes file that breaks Cursor, that's on you. We recommend:
 
-1. **Edit modes in the Cursor Modes UI** - use the built-in interface for creating and modifying modes
-2. **Use this tool primarily for backup** - save your working modes before making changes
-3. **Test carefully** - always backup your working modes before loading new ones
+- **Edit modes in the Cursor Modes UI** - use the built-in interface for creating and modifying modes
+- **Use this tool primarily for backup** - save your working modes before making changes to them, should you choose to edit them manually
 
 ### No Validation by Design
 This tool intentionally does **no validation** of modes files to keep it maximally decoupled from changes to Cursor's internal format. This means:

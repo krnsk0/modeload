@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3';
 import { readFileSync } from 'fs';
-import { CURSOR_SETTINGS_KEY } from './constants.js';
+import { CURSOR_SETTINGS_KEY, COMPOSER_STATE_KEY, MODES_KEY } from './constants.js';
 
 /**
  * Load custom modes from a JSON file into the Cursor database
@@ -66,12 +66,12 @@ export async function loadModesFromFile(dbPath: string, inputFile: string): Prom
     console.log('🔄 Updating modes...');
 
     // Ensure composerState exists
-    if (!currentSettings.composerState) {
-      currentSettings.composerState = {};
+    if (!currentSettings[COMPOSER_STATE_KEY]) {
+      currentSettings[COMPOSER_STATE_KEY] = {};
     }
 
     // Update the modes4 array
-    currentSettings.composerState.modes4 = modesData;
+    currentSettings[COMPOSER_STATE_KEY][MODES_KEY] = modesData;
 
     console.log('💾 Writing updated settings to database...');
 

@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3';
 import { writeFileSync } from 'fs';
-import { CURSOR_SETTINGS_KEY } from './constants.js';
+import { CURSOR_SETTINGS_KEY, COMPOSER_STATE_KEY, MODES_KEY } from './constants.js';
 
 /**
  * Save custom modes from Cursor database to a JSON file
@@ -41,7 +41,7 @@ export async function saveModesToFile(dbPath: string, outputFile: string): Promi
     }
 
     // Extract modes (trust the database structure)
-    const modes = settingsData?.composerState?.modes4;
+    const modes = settingsData?.[COMPOSER_STATE_KEY]?.[MODES_KEY];
 
     if (!modes || !Array.isArray(modes)) {
       console.log('⚠️  No custom modes found in database');
@@ -109,7 +109,7 @@ export async function previewModes(dbPath: string): Promise<any[]> {
     }
 
     const settingsData = JSON.parse(result.value);
-    const modes = settingsData?.composerState?.modes4 || [];
+    const modes = settingsData?.[COMPOSER_STATE_KEY]?.[MODES_KEY] || [];
 
     return Array.isArray(modes) ? modes : [];
   } finally {
